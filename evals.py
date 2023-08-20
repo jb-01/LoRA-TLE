@@ -53,7 +53,6 @@ class Evaluator:
 
         # Run basic evaluations using the provided prompt
         print('\n\nBase Llama-2 Model:')
-        # Run text generation pipeline with the base model
         pipe = pipeline(task="text-generation", model=self.base_model,
                         tokenizer=self.tokenizer, max_new_tokens=256, temperature=0.9)
         result = pipe(prompt)
@@ -63,8 +62,7 @@ class Evaluator:
         # Run text generation pipeline with the specialized adapter
         print('\n\nFine-tuned Adapter:')
         # Important: set the corresponding dataset before inference
-        # SQuAD is used because I'm the prompt is from the SQuAD validation set
-        self.model.set_adapter("SQuAD")
+        self.model.set_adapter("ai2_arc")
         pipe = pipeline(task="text-generation", model=self.model,
                         tokenizer=self.tokenizer, max_new_tokens=256, temperature=0.9)
         result = pipe(prompt)
@@ -151,9 +149,9 @@ class Evaluator:
             similarity_scores.append(squad_similarity)
 
             # Apply temperature to the max value in the similarity distribution
-            temperature = 4.0
+            maxTemperature = 4.0
             max_index = similarity_scores.index(max(similarity_scores))
-            similarity_scores[max_index] *= temperature
+            similarity_scores[max_index] *= maxTemperature
 
             softmax_scores = torch.nn.functional.softmax(
                 torch.tensor(similarity_scores), dim=0)
@@ -164,6 +162,7 @@ class Evaluator:
         acc = 0
         num_tokens = 0
 
+        # Note: increase num_tokens if using few-shot prompting
         while num_tokens < 256:
             softmax_scores = similarity(prompt)
             print(softmax_scores)
@@ -215,15 +214,16 @@ class Evaluator:
 
         result = pipe(original_prompt)
         result = result[0]['generated_text']
-        print('\n\nPrompt-level answer:')
+        print('\n\nPrompt-level response:')
         print(result)
 
 
 if __name__ == "__main__":
     evaluator = Evaluator()
 
-    prompt = """Create a basic C# program to print out the current date and time.
-    
+    prompt = """Question: Mercury, the planet nearest to the Sun, has extreme surface temperatures, ranging from 465°C in sunlight to -180°C in darkness. Why is there such a large range of temperatures on Mercury?
+Choices: A. The planet is too small to hold heat. B. The planet is heated on only one side. C. The planet reflects heat from its dark side. D. The planet lacks an atmosphere to hold heat.
+
 Answer:"""
 
     # Run basic evaluations
