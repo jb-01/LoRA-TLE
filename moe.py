@@ -4,10 +4,10 @@ from sentence_transformers import SentenceTransformer
 from transformers import pipeline, logging
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import LoraModel, LoraConfig, PeftModel
+from peft import LoraConfig, PeftModel
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 base_model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Llama-2-7b-hf", load_in_4bit=True)
@@ -82,6 +82,8 @@ squad_embeddings = embedding_model.encode(squad_embeddings['text'])
 squad_embeddings = torch.tensor(squad_embeddings).to(device)
 squad_embeddings = torch.mean(squad_embeddings, dim=0)
 
+# Get similarity scores using a weighted softmax of cosine similarities
+
 
 def similarity(prompt):
     similarity_scores = []
@@ -107,12 +109,11 @@ def similarity(prompt):
     squad_similarity = squad_similarity(prompt_embeddings, squad_embeddings)
     similarity_scores.append(squad_similarity)
 
-    # Apply temperature to the max value in the similarity distribution
+    # Apply a temperature to the max value in the similarity distribution
     temperature = 4.0
     max_index = similarity_scores.index(max(similarity_scores))
     similarity_scores[max_index] *= temperature
 
-    # Normal softmax
     softmax_scores = torch.nn.functional.softmax(
         torch.tensor(similarity_scores), dim=0)
 
@@ -156,5 +157,5 @@ while num_tokens < 256 and tokenizer.eos_token not in prompt:
     model.delete_adapter(f"tle_adapter_{acc-1}")
 
 
-print('\n\nFinal answer:')
+print('\n\nFinal response:')
 print(prompt)

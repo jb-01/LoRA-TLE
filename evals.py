@@ -155,7 +155,6 @@ class Evaluator:
             max_index = similarity_scores.index(max(similarity_scores))
             similarity_scores[max_index] *= temperature
 
-            # Normal softmax
             softmax_scores = torch.nn.functional.softmax(
                 torch.tensor(similarity_scores), dim=0)
 
@@ -223,14 +222,12 @@ class Evaluator:
 if __name__ == "__main__":
     evaluator = Evaluator()
 
-    prompt = """Context: The origin of electric and magnetic fields would not be fully explained until 1864 when James Clerk Maxwell unified a number of earlier theories into a set of 20 scalar equations, which were later reformulated into 4 vector equations by Oliver Heaviside and Josiah Willard Gibbs. These "Maxwell Equations" fully described the sources of the fields as being stationary and moving charges, and the interactions of the fields themselves. This led Maxwell to discover that electric and magnetic fields could be "self-generating" through a wave that traveled at a speed that he calculated to be the speed of light. This insight united the nascent fields of electromagnetic theory with optics and led directly to a complete description of the electromagnetic spectrum.
-
-Question: Who discovered that magnetic and electric could self-generate?
-
+    prompt = """Create a basic C# program to print out the current date and time.
+    
 Answer:"""
 
     # Run basic evaluations
-    # evaluator.run_basic_evaluations(prompt)
+    evaluator.run_basic_evaluations(prompt)
 
     # Run main evaluations
     evaluator.run_main_evaluations(prompt)
