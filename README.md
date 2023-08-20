@@ -6,3 +6,6 @@ Four independent LoRA adapters are finetuned on specific downstream tasks: math 
 Execute `evals.py` to observe the qualitative difference between token-level, prompt-level, base, and fine-tuned adapters on prompts drawing from all four downstream areas (math, science, code, and reading comprehension). Modify the `prompt` variable to customize the evaluated task.
 
 Note: each `prompt` must follow the format described in `data.py` which reflects formats used during supervised fine-tuning of the adapters.
+
+# Paper
+Coming soon.
