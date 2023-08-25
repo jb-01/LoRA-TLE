@@ -11,3 +11,6 @@ Execute `evals.py` to observe the qualitative difference between _token-level_, 
 
 ## Paper
 Pre-print is coming soon.
+
+## Acknowledgments
+c-BTM (Gururangan et al.), LoraHub (Huang et al.), MoLora (Maxine)
