@@ -10,7 +10,7 @@ Execute `evals.py` to observe the qualitative difference between _token-level_, 
 **Important**: adhere to the prompt templates in `utils/prompts.md` which outline the same scheme used during supervised fine-tuning of each adapter.
 
 ## Paper
-Preprint is available here: http://arxiv.org/abs/2311.10847.
+The paper is available here: https://dl.acm.org/doi/10.1145/3639592.3639615.
 
 ## Acknowledgments
 PEFT Modules for Task-level Generalisation (Ponti et al.), c-BTM (Gururangan et al.), LoraHub (Huang et al.), MoLora (Maxine)
